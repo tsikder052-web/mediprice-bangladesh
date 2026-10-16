@@ -1,1 +1,157 @@
-index.html
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>মেডিপ্রাইস বাংলাদেশ</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, "Noto Sans Bengali", sans-serif;
+      background: #f1f7f5;
+      color: #183b35;
+    }
+    header {
+      background: #087f5b;
+      color: white;
+      padding: 25px 16px;
+      text-align: center;
+    }
+    header h1 { margin: 0 0 8px; font-size: 28px; }
+    header p { margin: 0; }
+    main {
+      max-width: 720px;
+      margin: 22px auto;
+      padding: 0 14px;
+    }
+    .panel {
+      background: white;
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: 0 3px 12px #0000000c;
+      margin-bottom: 16px;
+    }
+    .tabs { display: flex; gap: 10px; margin-bottom: 15px; }
+    button {
+      cursor: pointer;
+      border: 0;
+      border-radius: 9px;
+      padding: 12px 15px;
+      font-size: 16px;
+    }
+    .tab { flex: 1; background: #e3eee9; color: #185b47; }
+    .tab.active { background: #087f5b; color: white; }
+    input, select {
+      width: 100%;
+      padding: 13px;
+      margin: 7px 0 12px;
+      border: 1px solid #cbd9d3;
+      border-radius: 8px;
+      font-size: 16px;
+      background: white;
+    }
+    .result {
+      padding: 13px 0;
+      border-bottom: 1px solid #e6eeea;
+    }
+    .result:last-child { border-bottom: 0; }
+    .name { font-size: 17px; font-weight: bold; }
+    .price { color: #087f5b; font-weight: bold; margin-top: 6px; }
+    .muted { color: #61756d; font-size: 13px; margin-top: 5px; }
+    .notice {
+      background: #fff4d6;
+      color: #694d00;
+      padding: 12px;
+      border-radius: 9px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    footer { text-align: center; padding: 20px; color: #61756d; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>মেডিপ্রাইস বাংলাদেশ</h1>
+    <p>ওষুধ ও চিকিৎসা পরীক্ষার মূল্য খুঁজুন</p>
+  </header>
+
+  <main>
+    <section class="panel">
+      <div class="tabs">
+        <button class="tab active" id="medicineTab" onclick="setType('medicine')">ওষুধের দাম</button>
+        <button class="tab" id="testTab" onclick="setType('test')">টেস্টের দাম</button>
+      </div>
+
+      <label for="search">নাম লিখে খুঁজুন</label>
+      <input id="search" type="search" placeholder="যেমন: প্যারাসিটামল বা CBC" oninput="render()">
+
+      <label for="place">প্রতিষ্ঠান (ঐচ্ছিক)</label>
+      <input id="place" type="text" placeholder="ফার্মেসি বা হাসপাতালের নাম" oninput="render()">
+    </section>
+
+    <section class="panel">
+      <h3 id="resultTitle">ওষুধের তালিকা</h3>
+      <div id="results"></div>
+    </section>
+
+    <div class="notice">
+      <strong>গুরুত্বপূর্ণ:</strong> এখানে দেখানো দামগুলো শুধু নমুনা। এগুলো বর্তমান বাজারদর নয়। কেনার আগে সংশ্লিষ্ট ফার্মেসি, হাসপাতাল বা পরীক্ষাগারে মূল্য যাচাই করুন।
+    </div>
+  </main>
+
+  <footer>মেডিপ্রাইস বাংলাদেশ · প্রাথমিক পরীক্ষামূলক সংস্করণ</footer>
+
+  <script>
+    const data = {
+      medicine: [
+        { name: "প্যারাসিটামল ৫০০ মি.গ্রা.", place: "নমুনা ফার্মেসি", price: "নমুনা মূল্য: ৳ ১" },
+        { name: "ওআরএস স্যালাইন", place: "নমুনা ফার্মেসি", price: "নমুনা মূল্য: ৳ ১০" },
+        { name: "সিট্রিজিন ১০ মি.গ্রা.", place: "নমুনা ফার্মেসি", price: "নমুনা মূল্য: ৳ ২" }
+      ],
+      test: [
+        { name: "CBC (Complete Blood Count)", place: "নমুনা ডায়াগনস্টিক সেন্টার", price: "নমুনা মূল্য: ৳ ৪০০" },
+        { name: "TSH পরীক্ষা", place: "নমুনা ডায়াগনস্টিক সেন্টার", price: "নমুনা মূল্য: ৳ ৮০০" },
+        { name: "রক্তের গ্লুকোজ পরীক্ষা", place: "নমুনা ডায়াগনস্টিক সেন্টার", price: "নমুনা মূল্য: ৳ ১৫০" }
+      ]
+    };
+
+    let type = "medicine";
+
+    function setType(newType) {
+      type = newType;
+      document.getElementById("medicineTab").classList.toggle("active", type === "medicine");
+      document.getElementById("testTab").classList.toggle("active", type === "test");
+      document.getElementById("resultTitle").textContent =
+        type === "medicine" ? "ওষুধের তালিকা" : "পরীক্ষার তালিকা";
+      render();
+    }
+
+    function render() {
+      const query = document.getElementById("search").value.trim().toLowerCase();
+      const place = document.getElementById("place").value.trim().toLowerCase();
+      const filtered = data[type].filter(item =>
+        item.name.toLowerCase().includes(query) &&
+        item.place.toLowerCase().includes(place)
+      );
+      const results = document.getElementById("results");
+
+      if (!filtered.length) {
+        results.innerHTML = "<p>কোনো ফলাফল পাওয়া যায়নি। অন্য নাম দিয়ে খুঁজুন।</p>";
+        return;
+      }
+
+      results.innerHTML = filtered.map(item => `
+        <div class="result">
+          <div class="name">${item.name}</div>
+          <div class="price">${item.price}</div>
+          <div class="muted">${item.place}</div>
+        </div>
+      `).join("");
+    }
+
+    render();
+  </script>
+</body>
+</html>
