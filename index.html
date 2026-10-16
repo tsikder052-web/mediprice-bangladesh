@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -43,7 +42,7 @@
     }
     .tab { flex: 1; background: #e3eee9; color: #185b47; }
     .tab.active { background: #087f5b; color: white; }
-    input, select {
+    input {
       width: 100%;
       padding: 13px;
       margin: 7px 0 12px;
@@ -68,7 +67,12 @@
       font-size: 14px;
       line-height: 1.6;
     }
-    footer { text-align: center; padding: 20px; color: #61756d; font-size: 13px; }
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #61756d;
+      font-size: 13px;
+    }
   </style>
 </head>
 <body>
@@ -80,78 +84,179 @@
   <main>
     <section class="panel">
       <div class="tabs">
-        <button class="tab active" id="medicineTab" onclick="setType('medicine')">ওষুধের দাম</button>
-        <button class="tab" id="testTab" onclick="setType('test')">টেস্টের দাম</button>
+        <button class="tab active" id="medicineTab"
+          onclick="setType('medicine')">ওষুধের দাম</button>
+        <button class="tab" id="testTab"
+          onclick="setType('test')">টেস্টের দাম</button>
       </div>
 
       <label for="search">নাম লিখে খুঁজুন</label>
-      <input id="search" type="search" placeholder="যেমন: প্যারাসিটামল বা CBC" oninput="render()">
+      <input id="search" type="search"
+        placeholder="যেমন: প্যারাসিটামল বা CBC"
+        oninput="render()">
 
       <label for="place">প্রতিষ্ঠান (ঐচ্ছিক)</label>
-      <input id="place" type="text" placeholder="ফার্মেসি বা হাসপাতালের নাম" oninput="render()">
+      <input id="place" type="text"
+        placeholder="ফার্মেসি বা হাসপাতালের নাম"
+        oninput="render()">
     </section>
 
     <section class="panel">
       <h3 id="resultTitle">ওষুধের তালিকা</h3>
-      <div id="results"></div>
+      <div id="results">তথ্য লোড হচ্ছে...</div>
     </section>
 
     <div class="notice">
-      <strong>গুরুত্বপূর্ণ:</strong> এখানে দেখানো দামগুলো শুধু নমুনা। এগুলো বর্তমান বাজারদর নয়। কেনার আগে সংশ্লিষ্ট ফার্মেসি, হাসপাতাল বা পরীক্ষাগারে মূল্য যাচাই করুন।
+      <strong>গুরুত্বপূর্ণ:</strong>
+      পরীক্ষামূলক তথ্যকে প্রকৃত বাজারদর মনে করবেন না।
+      ওষুধ কেনা বা পরীক্ষা করানোর আগে সংশ্লিষ্ট প্রতিষ্ঠানে
+      বর্তমান মূল্য যাচাই করুন।
     </div>
   </main>
 
-  <footer>মেডিপ্রাইস বাংলাদেশ · প্রাথমিক পরীক্ষামূলক সংস্করণ</footer>
+  <footer>মেডিপ্রাইস বাংলাদেশ · প্রাথমিক সংস্করণ</footer>
 
   <script>
-    const data = {
-      medicine: [
-        { name: "প্যারাসিটামল ৫০০ মি.গ্রা.", place: "নমুনা ফার্মেসি", price: "নমুনা মূল্য: ৳ ১" },
-        { name: "ওআরএস স্যালাইন", place: "নমুনা ফার্মেসি", price: "নমুনা মূল্য: ৳ ১০" },
-        { name: "সিট্রিজিন ১০ মি.গ্রা.", place: "নমুনা ফার্মেসি", price: "নমুনা মূল্য: ৳ ২" }
-      ],
-      test: [
-        { name: "CBC (Complete Blood Count)", place: "নমুনা ডায়াগনস্টিক সেন্টার", price: "নমুনা মূল্য: ৳ ৪০০" },
-        { name: "TSH পরীক্ষা", place: "নমুনা ডায়াগনস্টিক সেন্টার", price: "নমুনা মূল্য: ৳ ৮০০" },
-        { name: "রক্তের গ্লুকোজ পরীক্ষা", place: "নমুনা ডায়াগনস্টিক সেন্টার", price: "নমুনা মূল্য: ৳ ১৫০" }
-      ]
-    };
+    const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQKoYB85b7_5UMVlRwYVHeC_fbQD2pkA4lEofJvLoNG8N12V-nKFHRixX9cX3wy2v9ntZ5ou55PdvFo/pub?gid=0&single=true&output=csv";
 
+    let data = { medicine: [], test: [] };
     let type = "medicine";
+
+    function parseCSV(text) {
+      const rows = [];
+      let row = [], cell = "", quoted = false;
+
+      for (let i = 0; i < text.length; i++) {
+        const c = text[i];
+
+        if (c === '"' && quoted && text[i + 1] === '"') {
+          cell += '"';
+          i++;
+        } else if (c === '"') {
+          quoted = !quoted;
+        } else if (c === "," && !quoted) {
+          row.push(cell);
+          cell = "";
+        } else if ((c === "\n" || c === "\r") && !quoted) {
+          if (c === "\r" && text[i + 1] === "\n") i++;
+          row.push(cell);
+          if (row.some(v => v.trim())) rows.push(row);
+          row = [];
+          cell = "";
+        } else {
+          cell += c;
+        }
+      }
+
+      row.push(cell);
+      if (row.some(v => v.trim())) rows.push(row);
+      if (!rows.length) return [];
+
+      const headers = rows.shift().map(v => v.trim().toLowerCase());
+
+      return rows.map(r => {
+        const item = {};
+        headers.forEach((h, i) => item[h] = (r[i] || "").trim());
+        return item;
+      });
+    }
+
+    function safe(value) {
+      return String(value || "").replace(/[&<>"']/g, c => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      })[c]);
+    }
 
     function setType(newType) {
       type = newType;
-      document.getElementById("medicineTab").classList.toggle("active", type === "medicine");
-      document.getElementById("testTab").classList.toggle("active", type === "test");
+      document.getElementById("medicineTab")
+        .classList.toggle("active", type === "medicine");
+      document.getElementById("testTab")
+        .classList.toggle("active", type === "test");
       document.getElementById("resultTitle").textContent =
         type === "medicine" ? "ওষুধের তালিকা" : "পরীক্ষার তালিকা";
       render();
     }
 
     function render() {
-      const query = document.getElementById("search").value.trim().toLowerCase();
-      const place = document.getElementById("place").value.trim().toLowerCase();
-      const filtered = data[type].filter(item =>
-        item.name.toLowerCase().includes(query) &&
-        item.place.toLowerCase().includes(place)
-      );
+      const query = document.getElementById("search")
+        .value.trim().toLowerCase();
+      const place = document.getElementById("place")
+        .value.trim().toLowerCase();
       const results = document.getElementById("results");
 
+      const filtered = data[type].filter(item => {
+        const searchable = [
+          item.name_bn, item.name_en, item.strength
+        ].join(" ").toLowerCase();
+
+        return searchable.includes(query) &&
+          (item.institution || "").toLowerCase().includes(place);
+      });
+
       if (!filtered.length) {
-        results.innerHTML = "<p>কোনো ফলাফল পাওয়া যায়নি। অন্য নাম দিয়ে খুঁজুন।</p>";
+        results.innerHTML =
+          "<p>কোনো তথ্য পাওয়া যায়নি। পরে নতুন তথ্য যোগ করা হতে পারে।</p>";
         return;
       }
 
-      results.innerHTML = filtered.map(item => `
-        <div class="result">
-          <div class="name">${item.name}</div>
-          <div class="price">${item.price}</div>
-          <div class="muted">${item.place}</div>
-        </div>
-      `).join("");
+      results.innerHTML = filtered.map(item => {
+        const sample = /নমুনা|পরীক্ষামূলক|প্রকৃত দাম নয়/i.test(
+          (item.source || "") + " " + (item.notes || "")
+        );
+
+        const price = item.price_bdt
+          ? "৳ " + safe(item.price_bdt) +
+            (item.unit ? " / " + safe(item.unit) : "")
+          : "দাম দেওয়া হয়নি";
+
+        return `
+          <div class="result">
+            <div class="name">${safe(item.name_bn || item.name_en)}</div>
+            ${item.name_en ? `<div class="muted">${safe(item.name_en)}</div>` : ""}
+            ${item.strength ? `<div class="muted">${safe(item.strength)}</div>` : ""}
+            <div class="price">${price}</div>
+            <div class="muted">${safe(item.institution || "প্রতিষ্ঠানের নাম দেওয়া হয়নি")}</div>
+            ${item.city ? `<div class="muted">শহর: ${safe(item.city)}</div>` : ""}
+            ${item.verified_date ? `<div class="muted">তথ্য যাচাইয়ের তারিখ: ${safe(item.verified_date)}</div>` : ""}
+            ${item.source ? `<div class="muted">উৎস: ${safe(item.source)}</div>` : ""}
+            ${sample ? `<div class="notice" style="margin-top:8px">এটি পরীক্ষামূলক তথ্য—প্রকৃত বাজারদর নয়।</div>` : ""}
+            ${item.notes ? `<div class="muted">${safe(item.notes)}</div>` : ""}
+          </div>`;
+      }).join("");
     }
 
-    render();
+    async function loadPrices() {
+      const results = document.getElementById("results");
+      results.innerHTML = "<p>তথ্য লোড হচ্ছে...</p>";
+
+      try {
+        const response = await fetch(CSV_URL);
+        if (!response.ok) throw new Error("CSV load failed");
+
+        const text = await response.text();
+        const records = parseCSV(text);
+
+        data = { medicine: [], test: [] };
+
+        records.forEach(item => {
+          const category = (item.type || "").toLowerCase();
+          if (category === "medicine") data.medicine.push(item);
+          if (category === "test") data.test.push(item);
+        });
+
+        render();
+      } catch (error) {
+        results.innerHTML =
+          "<p>তথ্য লোড করা যায়নি। ইন্টারনেট ও Google Sheet-এর প্রকাশিত লিংক যাচাই করুন।</p>";
+      }
+    }
+
+    loadPrices();
   </script>
 </body>
 </html>
