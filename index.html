@@ -3,129 +3,363 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>মেডিপ্রাইস বাংলাদেশ</title>
+  <meta name="theme-color" content="#087f5b">
+  <meta name="description" content="বাংলাদেশে ওষুধ ও চিকিৎসা পরীক্ষার মূল্যতথ্য খুঁজুন। মূল্য কেনার আগে সংশ্লিষ্ট প্রতিষ্ঠানে যাচাই করুন।">
+  <title>মেডিপ্রাইস বাংলাদেশ | ওষুধ ও টেস্টের মূল্য</title>
+
   <style>
     * { box-sizing: border-box; }
+
+    :root {
+      --green: #087f5b;
+      --dark-green: #075c43;
+      --light-green: #e8f5ef;
+      --background: #f3f8f6;
+      --text: #183b35;
+      --muted: #61756d;
+      --border: #dce9e2;
+      --white: #ffffff;
+    }
+
+    html { scroll-behavior: smooth; }
+
     body {
       margin: 0;
       font-family: Arial, "Noto Sans Bengali", sans-serif;
-      background: #f1f7f5;
-      color: #183b35;
+      background: var(--background);
+      color: var(--text);
+      line-height: 1.65;
     }
-    header {
-      background: #087f5b;
+
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+
+    .hero {
+      background: linear-gradient(135deg, #075c43, #0b966b);
       color: white;
-      padding: 25px 16px;
+      padding: 36px 16px 40px;
       text-align: center;
     }
-    header h1 { margin: 0 0 8px; font-size: 28px; }
-    header p { margin: 0; }
-    main {
-      max-width: 720px;
-      margin: 22px auto;
-      padding: 0 14px;
-    }
-    .panel {
-      background: white;
-      border-radius: 14px;
-      padding: 18px;
-      box-shadow: 0 3px 12px #0000000c;
-      margin-bottom: 16px;
-    }
-    .tabs { display: flex; gap: 10px; margin-bottom: 15px; }
-    button {
-      cursor: pointer;
-      border: 0;
-      border-radius: 9px;
-      padding: 12px 15px;
-      font-size: 16px;
-    }
-    .tab { flex: 1; background: #e3eee9; color: #185b47; }
-    .tab.active { background: #087f5b; color: white; }
-    input {
-      width: 100%;
-      padding: 13px;
-      margin: 7px 0 12px;
-      border: 1px solid #cbd9d3;
-      border-radius: 8px;
-      font-size: 16px;
-      background: white;
-    }
-    .result {
-      padding: 13px 0;
-      border-bottom: 1px solid #e6eeea;
-    }
-    .result:last-child { border-bottom: 0; }
-    .name { font-size: 17px; font-weight: bold; }
-    .price { color: #087f5b; font-weight: bold; margin-top: 6px; }
-    .muted { color: #61756d; font-size: 13px; margin-top: 5px; }
-    .notice {
-      background: #fff4d6;
-      color: #694d00;
-      padding: 12px;
-      border-radius: 9px;
-      font-size: 14px;
-      line-height: 1.6;
-    }
-    footer {
-      text-align: center;
-      padding: 20px;
-      color: #61756d;
+
+    .brand {
+      display: inline-block;
+      margin-bottom: 8px;
+      padding: 4px 12px;
+      border: 1px solid #ffffff65;
+      border-radius: 30px;
       font-size: 13px;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(26px, 5vw, 38px);
+      line-height: 1.35;
+    }
+
+    .hero p {
+      margin: 10px 0 0;
+      color: #e8fff5;
+      font-size: 16px;
+    }
+
+    .hero a {
+      display: inline-block;
+      margin-top: 17px;
+      padding: 7px 15px;
+      border: 1px solid #ffffff80;
+      border-radius: 8px;
+      color: white;
+      text-decoration: none;
+    }
+
+    .hero a:hover { background: #ffffff20; }
+
+    main {
+      width: min(100% - 28px, 780px);
+      margin: 24px auto;
+    }
+
+    .panel {
+      margin-bottom: 18px;
+      padding: 22px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 4px 18px #173d2c0a;
+    }
+
+    .section-heading {
+      margin: 0 0 5px;
+      font-size: 21px;
+    }
+
+    .subheading {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .tab {
+      flex: 1;
+      min-height: 48px;
+      padding: 11px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--light-green);
+      color: var(--dark-green);
+      font-weight: 700;
+      transition: background .15s ease;
+    }
+
+    .tab.active {
+      border-color: var(--green);
+      background: var(--green);
+      color: white;
+    }
+
+    label {
+      display: block;
+      margin: 0 0 6px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    input {
+      display: block;
+      width: 100%;
+      min-height: 48px;
+      margin-bottom: 16px;
+      padding: 12px 14px;
+      border: 1px solid #cbdcd3;
+      border-radius: 10px;
+      outline: none;
+      background: white;
+      color: var(--text);
+      font-size: 16px;
+    }
+
+    input:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px #087f5b20;
+    }
+
+    .search-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: -5px;
+    }
+
+    .secondary-button {
+      padding: 9px 15px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: white;
+      color: var(--dark-green);
+    }
+
+    .secondary-button:hover { background: var(--light-green); }
+
+    .results-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .results-heading h2 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .count {
+      padding: 4px 10px;
+      border-radius: 30px;
+      background: var(--light-green);
+      color: var(--dark-green);
+      font-size: 13px;
+    }
+
+    .result {
+      padding: 17px 0;
+      border-bottom: 1px solid #e7efea;
+      overflow-wrap: anywhere;
+    }
+
+    .result:last-child { border-bottom: 0; }
+
+    .name {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .muted {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .price {
+      margin-top: 8px;
+      color: var(--green);
+      font-size: 21px;
+      font-weight: 700;
+    }
+
+    .price-missing {
+      color: #855b13;
+      font-size: 15px;
+    }
+
+    .notice {
+      padding: 14px 16px;
+      border: 1px solid #f0dfac;
+      border-radius: 11px;
+      background: #fff8e5;
+      color: #694d00;
+      font-size: 14px;
+      line-height: 1.75;
+    }
+
+    .status {
+      padding: 20px 8px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .about h2 { margin-top: 0; }
+    .about h3 { margin-bottom: 5px; font-size: 17px; }
+    .about p { margin-top: 5px; }
+
+    footer {
+      padding: 25px 15px;
+      background: #e8f2ed;
+      color: var(--muted);
+      text-align: center;
+      font-size: 13px;
+    }
+
+    @media (max-width: 480px) {
+      .hero { padding: 28px 14px 32px; }
+      main { width: calc(100% - 20px); margin: 14px auto; }
+      .panel { padding: 16px; border-radius: 13px; }
+      .tabs { gap: 7px; }
+      .tab { padding: 10px 6px; font-size: 14px; }
+      .name { font-size: 16px; }
+      .price { font-size: 20px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { transition: none !important; }
     }
   </style>
 </head>
+
 <body>
-  <header>
+  <header class="hero">
+    <div class="brand">সহজে খুঁজুন · তথ্য যাচাই করুন</div>
     <h1>মেডিপ্রাইস বাংলাদেশ</h1>
-    <p>ওষুধ ও চিকিৎসা পরীক্ষার মূল্য খুঁজুন</p>
-    <a href="#about" style="display:inline-block;margin-top:10px;color:white;text-decoration:underline;">আমাদের সম্পর্কে</a>
+    <p>ওষুধ ও চিকিৎসা পরীক্ষার মূল্যতথ্য এক জায়গায়</p>
+    <a href="#about">আমাদের সম্পর্কে ↓</a>
   </header>
 
   <main>
-    <section class="panel">
+    <section class="panel" aria-label="মূল্য খুঁজুন">
+      <h2 class="section-heading">কী খুঁজতে চান?</h2>
+      <p class="subheading">ওষুধের নাম, ইংরেজি নাম বা টেস্টের নাম লিখুন।</p>
+
       <div class="tabs">
-        <button class="tab active" id="medicineTab"
-          onclick="setType('medicine')">ওষুধের দাম</button>
-        <button class="tab" id="testTab"
-          onclick="setType('test')">টেস্টের দাম</button>
+        <button type="button" class="tab active" id="medicineTab"
+          aria-pressed="true" onclick="setType('medicine')">
+          💊 ওষুধের দাম
+        </button>
+        <button type="button" class="tab" id="testTab"
+          aria-pressed="false" onclick="setType('test')">
+          🧪 টেস্টের দাম
+        </button>
       </div>
 
-      <label for="search">নাম লিখে খুঁজুন</label>
+      <label for="search">ওষুধ বা টেস্টের নাম</label>
       <input id="search" type="search"
-        placeholder="যেমন: প্যারাসিটামল বা CBC"
-        oninput="render()">
+        placeholder="যেমন: Napa, প্যারাসিটামল, CBC"
+        autocomplete="off">
 
-      <label for="place">প্রতিষ্ঠান (ঐচ্ছিক)</label>
-      <input id="place" type="text"
-        placeholder="ফার্মেসি বা হাসপাতালের নাম"
-        oninput="render()">
+      <label for="place">ফার্মেসি, হাসপাতাল বা প্রতিষ্ঠানের নাম (ঐচ্ছিক)</label>
+      <input id="place" type="search"
+        placeholder="যেমন: হাসপাতাল বা ডায়াগনস্টিক সেন্টার"
+        autocomplete="off">
+
+      <div class="search-actions">
+        <button type="button" class="secondary-button" id="clearButton">
+          সব মুছুন
+        </button>
+      </div>
     </section>
 
-    <section class="panel">
-      <h3 id="resultTitle">ওষুধের তালিকা</h3>
-      <div id="results">তথ্য লোড হচ্ছে...</div>
+    <section class="panel" aria-live="polite">
+      <div class="results-heading">
+        <h2 id="resultTitle">ওষুধের তালিকা</h2>
+        <span class="count" id="resultCount">লোড হচ্ছে</span>
+      </div>
+      <div id="results">
+        <div class="status">তথ্য লোড হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন...</div>
+      </div>
     </section>
 
     <div class="notice">
-      <strong>গুরুত্বপূর্ণ:</strong>
-      পরীক্ষামূলক তথ্যকে প্রকৃত বাজারদর মনে করবেন না।
-      ওষুধ কেনা বা পরীক্ষা করানোর আগে সংশ্লিষ্ট প্রতিষ্ঠানে
-      বর্তমান মূল্য যাচাই করুন।
+      <strong>গুরুত্বপূর্ণ সতর্কতা:</strong>
+      এখানে প্রদর্শিত মূল্য সব সময় হালনাগাদ নাও থাকতে পারে।
+      ওষুধ কেনা বা পরীক্ষা করানোর আগে সংশ্লিষ্ট ফার্মেসি,
+      হাসপাতাল বা ডায়াগনস্টিক সেন্টারে বর্তমান মূল্য যাচাই করুন।
+      মূল্যতথ্য চিকিৎসকের পরামর্শের বিকল্প নয়।
     </div>
+
+    <section class="panel about" id="about" style="margin-top:18px">
+      <h2>মেডিপ্রাইস বাংলাদেশ সম্পর্কে</h2>
+      <p>
+        মেডিপ্রাইস বাংলাদেশ হলো ওষুধ ও চিকিৎসা পরীক্ষার
+        মূল্যতথ্য সহজে খুঁজে পাওয়ার একটি তথ্যভিত্তিক উদ্যোগ।
+      </p>
+
+      <h3>আমাদের লক্ষ্য</h3>
+      <p>
+        মানুষ যেন প্রয়োজনীয় মূল্যতথ্য সহজে খুঁজে পান এবং
+        সংশ্লিষ্ট প্রতিষ্ঠানের সঙ্গে মূল্য যাচাই করতে পারেন।
+      </p>
+
+      <h3>তথ্যের নির্ভরযোগ্যতা</h3>
+      <p>
+        যেখানে পাওয়া যায়, সেখানে তথ্যের উৎস ও যাচাইয়ের তারিখ
+        দেখানো হয়। সব তথ্য সব সময় নির্ভুল বা হালনাগাদ থাকার
+        নিশ্চয়তা দেওয়া সম্ভব নয়।
+      </p>
+    </section>
   </main>
 
-  <footer>মেডিপ্রাইস বাংলাদেশ · প্রাথমিক সংস্করণ</footer>
+  <footer>
+    মেডিপ্রাইস বাংলাদেশ · তথ্য জানুন, মূল্য যাচাই করুন
+  </footer>
 
   <script>
     const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQKoYB85b7_5UMVlRwYVHeC_fbQD2pkA4lEofJvLoNG8N12V-nKFHRixX9cX3wy2v9ntZ5ou55PdvFo/pub?gid=0&single=true&output=csv";
 
     let data = { medicine: [], test: [] };
     let type = "medicine";
+    let loadFailed = false;
 
     function parseCSV(text) {
       const rows = [];
-      let row = [], cell = "", quoted = false;
+      let row = [];
+      let cell = "";
+      let quoted = false;
 
       for (let i = 0; i < text.length; i++) {
         const c = text[i];
@@ -157,13 +391,15 @@
 
       return rows.map(r => {
         const item = {};
-        headers.forEach((h, i) => item[h] = (r[i] || "").trim());
+        headers.forEach((h, i) => {
+          item[h] = (r[i] || "").trim();
+        });
         return item;
       });
     }
 
     function safe(value) {
-      return String(value || "").replace(/[&<>"']/g, c => ({
+      return String(value == null ? "" : value).replace(/[&<>"']/g, c => ({
         "&": "&amp;",
         "<": "&lt;",
         ">": "&gt;",
@@ -172,36 +408,72 @@
       })[c]);
     }
 
+    function normalize(value) {
+      return String(value || "")
+        .toLocaleLowerCase()
+        .normalize("NFC")
+        .replace(/[০-৯]/g, digit =>
+          String("০১২৩৪৫৬৭৮৯".indexOf(digit))
+        )
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
     function setType(newType) {
       type = newType;
-      document.getElementById("medicineTab")
-        .classList.toggle("active", type === "medicine");
-      document.getElementById("testTab")
-        .classList.toggle("active", type === "test");
+
+      document.getElementById("medicineTab").classList.toggle(
+        "active", type === "medicine"
+      );
+      document.getElementById("testTab").classList.toggle(
+        "active", type === "test"
+      );
+
+      document.getElementById("medicineTab").setAttribute(
+        "aria-pressed", String(type === "medicine")
+      );
+      document.getElementById("testTab").setAttribute(
+        "aria-pressed", String(type === "test")
+      );
+
       document.getElementById("resultTitle").textContent =
         type === "medicine" ? "ওষুধের তালিকা" : "পরীক্ষার তালিকা";
+
       render();
     }
 
     function render() {
-      const query = document.getElementById("search")
-        .value.trim().toLowerCase();
-      const place = document.getElementById("place")
-        .value.trim().toLowerCase();
+      const query = normalize(document.getElementById("search").value);
+      const place = normalize(document.getElementById("place").value);
       const results = document.getElementById("results");
+      const count = document.getElementById("resultCount");
+
+      if (loadFailed) {
+        count.textContent = "ত্রুটি";
+        results.innerHTML =
+          '<div class="status">তথ্য লোড করা যায়নি। ইন্টারনেট সংযোগ ও Google Sheet-এর প্রকাশিত লিংক যাচাই করুন।</div>';
+        return;
+      }
 
       const filtered = data[type].filter(item => {
-        const searchable = [
-          item.name_bn, item.name_en, item.strength
-        ].join(" ").toLowerCase();
+        const searchable = normalize([
+          item.name_bn,
+          item.name_en,
+          item.strength,
+          item.institution,
+          item.city
+        ].join(" "));
 
-        return searchable.includes(query) &&
-          (item.institution || "").toLowerCase().includes(place);
+        const institution = normalize(item.institution);
+
+        return searchable.includes(query) && institution.includes(place);
       });
+
+      count.textContent = filtered.length + "টি ফলাফল";
 
       if (!filtered.length) {
         results.innerHTML =
-          "<p>কোনো তথ্য পাওয়া যায়নি। পরে নতুন তথ্য যোগ করা হতে পারে।</p>";
+          '<div class="status">কোনো তথ্য পাওয়া যায়নি। অন্য বানানে খুঁজুন অথবা পরে আবার চেষ্টা করুন।</div>';
         return;
       }
 
@@ -210,33 +482,45 @@
           (item.source || "") + " " + (item.notes || "")
         );
 
-        const price = item.price_bdt
-          ? "৳ " + safe(item.price_bdt) +
-            (item.unit ? " / " + safe(item.unit) : "")
-          : "দাম দেওয়া হয়নি";
+        const hasPrice = item.price_bdt !== undefined &&
+          item.price_bdt.trim() !== "";
+
+        const price = hasPrice
+          ? '<div class="price">৳ ' + safe(item.price_bdt) +
+            (item.unit ? ' / ' + safe(item.unit) : '') + '</div>'
+          : '<div class="price price-missing">দাম দেওয়া হয়নি</div>';
 
         return `
-          <div class="result">
-            <div class="name">${safe(item.name_bn || item.name_en)}</div>
+          <article class="result">
+            <div class="name">${safe(item.name_bn || item.name_en || "নাম দেওয়া হয়নি")}</div>
             ${item.name_en ? `<div class="muted">${safe(item.name_en)}</div>` : ""}
             ${item.strength ? `<div class="muted">${safe(item.strength)}</div>` : ""}
-            <div class="price">${price}</div>
+            ${price}
             <div class="muted">${safe(item.institution || "প্রতিষ্ঠানের নাম দেওয়া হয়নি")}</div>
             ${item.city ? `<div class="muted">শহর: ${safe(item.city)}</div>` : ""}
-            ${item.verified_date ? `<div class="muted">তথ্য যাচাইয়ের তারিখ: ${safe(item.verified_date)}</div>` : ""}
-            ${item.source ? `<div class="muted">উৎস: ${safe(item.source)}</div>` : ""}
-            ${sample ? `<div class="notice" style="margin-top:8px">এটি পরীক্ষামূলক তথ্য—প্রকৃত বাজারদর নয়।</div>` : ""}
+            ${item.verified_date ? `<div class="muted">যাচাইয়ের তারিখ: ${safe(item.verified_date)}</div>` : ""}
+            ${item.source ? `<div class="muted">তথ্যের উৎস: ${safe(item.source)}</div>` : ""}
+            ${sample ? `<div class="notice" style="margin-top:10px">এটি পরীক্ষামূলক তথ্য—প্রকৃত বাজারদর হিসেবে ব্যবহার করবেন না।</div>` : ""}
             ${item.notes ? `<div class="muted">${safe(item.notes)}</div>` : ""}
-          </div>`;
+          </article>`;
       }).join("");
     }
 
+    document.getElementById("search").addEventListener("input", render);
+    document.getElementById("place").addEventListener("input", render);
+
+    document.getElementById("clearButton").addEventListener("click", () => {
+      document.getElementById("search").value = "";
+      document.getElementById("place").value = "";
+      render();
+      document.getElementById("search").focus();
+    });
+
     async function loadPrices() {
       const results = document.getElementById("results");
-      results.innerHTML = "<p>তথ্য লোড হচ্ছে...</p>";
 
       try {
-        const response = await fetch(CSV_URL);
+        const response = await fetch(CSV_URL, { cache: "no-store" });
         if (!response.ok) throw new Error("CSV load failed");
 
         const text = await response.text();
@@ -245,30 +529,22 @@
         data = { medicine: [], test: [] };
 
         records.forEach(item => {
-          const category = (item.type || "").toLowerCase();
+          const category = normalize(item.type);
           if (category === "medicine") data.medicine.push(item);
           if (category === "test") data.test.push(item);
         });
 
+        loadFailed = false;
         render();
       } catch (error) {
+        loadFailed = true;
         results.innerHTML =
-          "<p>তথ্য লোড করা যায়নি। ইন্টারনেট ও Google Sheet-এর প্রকাশিত লিংক যাচাই করুন।</p>";
+          '<div class="status">তথ্য লোড করা যায়নি। ইন্টারনেট সংযোগ ও Google Sheet-এর প্রকাশিত লিংক যাচাই করুন।</div>';
+        document.getElementById("resultCount").textContent = "ত্রুটি";
       }
     }
 
     loadPrices();
   </script>
-
-  <section id="about" style="max-width:800px;margin:30px auto;padding:20px;line-height:1.8;border-top:1px solid #ddd;">
-    <h2>মেডিপ্রাইস বাংলাদেশ সম্পর্কে</h2>
-    <p>মেডিপ্রাইস বাংলাদেশ হলো ওষুধ ও চিকিৎসা পরীক্ষার মূল্যতথ্য সহজে খুঁজে পাওয়ার একটি তথ্যভিত্তিক উদ্যোগ।</p>
-    <h3>আমাদের লক্ষ্য</h3>
-    <p>ওষুধ ও চিকিৎসা পরীক্ষার মূল্যসংক্রান্ত তথ্য সহজভাবে উপস্থাপন করা, যাতে মানুষ প্রয়োজনীয় তথ্য খুঁজে পেতে পারেন।</p>
-    <h3>গুরুত্বপূর্ণ সতর্কতা</h3>
-    <p>প্রকাশিত মূল্য পরিবর্তিত হতে পারে। ওষুধ কেনা বা পরীক্ষা করানোর আগে সংশ্লিষ্ট ফার্মেসি, হাসপাতাল বা ডায়াগনস্টিক প্রতিষ্ঠানের সঙ্গে মূল্য নিশ্চিত করুন। এই ওয়েবসাইটের তথ্য চিকিৎসকের পরামর্শের বিকল্প নয়।</p>
-    <h3>তথ্যের নির্ভরযোগ্যতা</h3>
-    <p>আমরা তথ্যের উৎস ও যাচাইয়ের তারিখ উল্লেখ করার চেষ্টা করি। তবে সব তথ্য সব সময় হালনাগাদ বা সম্পূর্ণ নির্ভুল থাকার নিশ্চয়তা দেওয়া সম্ভব নয়।</p>
-  </section>
 </body>
 </html>
