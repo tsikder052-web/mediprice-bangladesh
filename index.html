@@ -526,13 +526,27 @@
         const text = await response.text();
         const records = parseCSV(text);
 
-        data = { medicine: [], test: [] };
+       data = { medicine: [], test: [] };
+const seenRecords = { medicine: new Set(), test: new Set() };
 
-        records.forEach(item => {
-          const category = normalize(item.type);
-          if (category === "medicine") data.medicine.push(item);
-          if (category === "test") data.test.push(item);
-        });
+records.forEach(item => {
+  const category = normalize(item.type);
+  if (category !== "medicine" && category !== "test") return;
+
+  const identity = [
+    item.name_bn,
+    item.name_en,
+    item.strength,
+    item.institution,
+    item.price_bdt,
+    item.unit
+  ].map(value => normalize(value)).join("|");
+
+  if (seenRecords[category].has(identity)) return;
+
+  seenRecords[category].add(identity);
+  data[category].push(item);
+});
 
         loadFailed = false;
         render();
