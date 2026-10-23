@@ -387,7 +387,7 @@
       if (row.some(v => v.trim())) rows.push(row);
       if (!rows.length) return [];
 
-      const headers = rows.shift().map(v => v.trim().toLowerCase());
+      const headers = rows.shift().map(v => v.replace(/^\uFEFF/, "").trim().toLowerCase())
 
       return rows.map(r => {
         const item = {};
