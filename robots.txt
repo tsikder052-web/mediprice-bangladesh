@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://tsikder052-web.github.io/mediprice-bangladesh/sitemap.xml
